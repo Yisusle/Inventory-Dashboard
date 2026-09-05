@@ -57,3 +57,10 @@ src/app/
 ├── layouts/     # Shell de aplicación y navegación
 └── shared/      # Componentes reutilizables
 ```
+
+## Licencia
+
+Todos los derechos reservados. El código se publica únicamente con fines de
+portafolio y evaluación. No se permite copiar, modificar, redistribuir,
+publicar o utilizar comercialmente este proyecto sin autorización previa por
+escrito. Consulta [LICENSE](./LICENSE).
