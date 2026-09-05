@@ -1,0 +1,122 @@
+.shell {
+  background: transparent;
+  min-height: 100dvh;
+}
+
+.sidebar {
+  background: color-mix(in srgb, var(--mat-sys-surface) 94%, white);
+  border-right: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 75%, transparent);
+  width: 264px;
+}
+
+.brand {
+  align-items: center;
+  color: var(--mat-sys-on-surface);
+  display: flex;
+  font-size: 1.2rem;
+  font-weight: 700;
+  gap: 0.75rem;
+  letter-spacing: -0.04em;
+  padding: 1.5rem 1.25rem 1.75rem;
+  text-decoration: none;
+}
+
+.brand-mark {
+  align-items: center;
+  background: linear-gradient(135deg, #056b7d, #0d9db2);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 14px rgb(7 117 138 / 24%);
+  color: white;
+  display: flex;
+  font-size: 0.95rem;
+  height: 2.35rem;
+  justify-content: center;
+  width: 2.35rem;
+}
+
+.brand-name {
+  font-size: 1.3rem;
+}
+
+.active-link {
+  background: color-mix(in srgb, var(--mat-sys-primary-container) 78%, white);
+  border-radius: 0.7rem;
+  color: var(--mat-sys-on-primary-container);
+  font-weight: 600;
+}
+
+mat-nav-list {
+  padding: 0 0.75rem;
+}
+
+mat-nav-list a {
+  border-radius: 0.7rem;
+  margin: 0.2rem 0;
+}
+
+.topbar {
+  background: color-mix(in srgb, var(--mat-sys-surface) 92%, white);
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 75%, transparent);
+  min-height: 4.5rem;
+  padding: 0 1.75rem;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.user-summary {
+  align-items: center;
+  display: flex;
+  gap: 0.65rem;
+  margin-right: 0.5rem;
+
+  small { color: var(--mat-sys-on-surface-variant); }
+}
+
+.user-avatar {
+  align-items: center;
+  background: var(--mat-sys-primary-container);
+  border-radius: 50%;
+  color: var(--mat-sys-on-primary-container);
+  display: flex;
+  font-size: 0.85rem;
+  font-weight: 700;
+  height: 2.1rem;
+  justify-content: center;
+  width: 2.1rem;
+}
+
+.user-copy {
+  display: grid;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 1480px;
+  padding: 2.25rem clamp(1.25rem, 3vw, 3rem) 3rem;
+}
+
+.menu-button {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .menu-button {
+    display: inline-flex;
+  }
+
+  .content {
+    padding: 1.25rem;
+  }
+
+  .topbar {
+    padding: 0 1rem;
+  }
+}

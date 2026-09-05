@@ -1,0 +1,24 @@
+.page-header h1 { margin: .2rem 0; }
+.page-header p:not(.eyebrow), small, .movement-list p { color: var(--mat-sys-on-surface-variant); }
+.eyebrow { color: var(--mat-sys-primary); font-size: .75rem; font-weight: 700; letter-spacing: .1em; margin: 0; }
+.form-card { margin-bottom: 1.5rem; }
+.type-selector { border-bottom: 1px solid var(--mat-sys-outline-variant); margin-bottom: 1.5rem; }
+.type-selector button.selected { border-bottom: 2px solid var(--mat-sys-primary); color: var(--mat-sys-primary); }
+form { align-items: start; display: grid; gap: .5rem 1rem; grid-template-columns: 2fr 1fr 1fr auto auto; }
+form button { min-height: 56px; }
+.sale-quote { align-self: stretch; background: var(--mat-sys-secondary-container); border-radius: .5rem; display: grid; gap: .2rem; min-height: 56px; padding: .7rem 1rem; }
+.sale-quote span { color: var(--mat-sys-on-secondary-container); font-size: .8rem; }
+.sale-quote strong { color: var(--mat-sys-on-secondary-container); }
+.sale-cart { border-top: 1px solid var(--mat-sys-outline-variant); margin-top: 1rem; padding-top: 1rem; }
+.sale-cart h2 { font-size: 1rem; margin: 0 0 .5rem; }
+.sale-cart > div, .sale-cart footer { align-items: center; display: grid; gap: .75rem; grid-template-columns: 1fr auto auto; padding: .4rem 0; }
+.sale-cart footer { border-top: 1px solid var(--mat-sys-outline-variant); display: block; margin-top: .5rem; text-align: right; }
+.history { display: grid; gap: 1.5rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.movement-list > div { align-items: center; border-bottom: 1px solid var(--mat-sys-outline-variant); display: grid; gap: .85rem; grid-template-columns: 1fr auto auto; padding: .85rem 0; }
+.movement-list span { display: grid; gap: .2rem; }
+.totals { text-align: right; }
+.history mat-paginator { margin-top: 0.75rem; }
+.loading { display: grid; min-height: 160px; place-items: center; }
+@media (max-width: 900px) { form { grid-template-columns: 1fr 1fr; } form button { grid-column: span 2; } .history { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .movement-list > div { grid-template-columns: 1fr auto; } .totals { grid-column: 1 / span 2; text-align: left; } }
+@media (max-width: 550px) { form { grid-template-columns: 1fr; } form button { grid-column: auto; } }

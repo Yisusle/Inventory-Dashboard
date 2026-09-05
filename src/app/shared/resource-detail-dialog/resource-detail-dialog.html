@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="content">
+  @if (data.subtitle) {
+    <p class="subtitle">{{ data.subtitle }}</p>
+  }
+  <dl>
+    @for (row of data.rows; track row.label) {
+      <div class="row">
+        <dt>{{ row.label }}</dt>
+        <dd>{{ row.value }}</dd>
+      </div>
+    }
+  </dl>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

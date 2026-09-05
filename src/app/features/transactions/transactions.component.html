@@ -1,0 +1,191 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">OPERACIÓN DIARIA</p>
+    <h1>Movimientos</h1>
+    <p>Registra entradas y salidas de inventario de forma segura.</p>
+  </div>
+</section>
+
+<mat-card class="form-card">
+  <mat-card-header><mat-card-title>Registrar movimiento</mat-card-title></mat-card-header>
+  <mat-card-content>
+    @if (isLoading()) {
+      <div class="loading"><mat-spinner diameter="36" /></div>
+    } @else {
+      <div class="type-selector">
+        <button mat-button [class.selected]="type() === 'sale'" (click)="selectType('sale')">
+          <mat-icon>point_of_sale</mat-icon>
+          Venta
+        </button>
+        @if (isAdmin()) {
+          <button mat-button [class.selected]="type() === 'purchase'" (click)="selectType('purchase')">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Compra
+          </button>
+          <button mat-button [class.selected]="type() === 'adjustment'" (click)="selectType('adjustment')">
+            <mat-icon>tune</mat-icon>
+            Ajuste
+          </button>
+          <button mat-button [class.selected]="type() === 'return'" (click)="selectType('return')">
+            <mat-icon>keyboard_return</mat-icon>
+            Devolución
+          </button>
+        }
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar por SKU</mat-label>
+          <input matInput formControlName="skuLookup" (keyup.enter)="findProductBySku()" />
+          <button mat-icon-button matSuffix type="button" (click)="findProductBySku()" aria-label="Buscar por SKU">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="productId">
+            @for (product of products(); track product.id) {
+              <mat-option [value]="product.id" [disabled]="type() === 'sale' && product.stock < 1">
+                {{ product.name }} · Stock: {{ product.stock }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (form.controls.productId.invalid) { <mat-error>Selecciona un producto.</mat-error> }
+        </mat-form-field>
+        @if (type() !== 'adjustment') {
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" min="1" formControlName="quantity" />
+          @if (type() === 'sale' && selectedProduct()) {
+            <mat-hint>Disponibles: {{ selectedProduct()?.stock }}</mat-hint>
+          }
+        </mat-form-field>
+        } @else {
+          <mat-form-field appearance="outline">
+            <mat-label>Ajuste de existencias</mat-label>
+            <input matInput type="number" step="1" formControlName="quantityChange" />
+            <mat-hint>Usa positivo para entrada y negativo para salida.</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Motivo</mat-label>
+            <input matInput formControlName="reason" />
+          </mat-form-field>
+        }
+        @if (type() === 'return') {
+          <mat-form-field appearance="outline">
+            <mat-label>ID de venta</mat-label>
+            <input matInput formControlName="saleId" />
+            <mat-hint>Consulta el detalle de la venta para copiar su ID.</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Motivo de devolución</mat-label>
+            <input matInput formControlName="reason" />
+          </mat-form-field>
+        }
+        @if (type() === 'purchase') {
+          <mat-form-field appearance="outline">
+            <mat-label>Costo total</mat-label>
+            <input matInput type="number" min="0.01" step="0.01" formControlName="totalCost" />
+          </mat-form-field>
+        } @else if (type() === 'sale') {
+          <div class="sale-quote" aria-live="polite">
+            <span>Precio vigente: {{ selectedProduct()?.price ?? 0 | currency: 'MXN' }}</span>
+            <strong>Total calculado: {{ saleTotal() | currency: 'MXN' }}</strong>
+          </div>
+        }
+        @if (type() === 'sale') {
+          <button mat-stroked-button type="button" (click)="addSaleLine()" [disabled]="isSaving()">
+            <mat-icon>add</mat-icon>
+            Agregar a venta
+          </button>
+        }
+        <button mat-flat-button type="submit" [disabled]="isSaving() || (type() === 'sale' && !saleLines().length)">
+          {{ isSaving() ? 'Registrando...' : 'Registrar ' + (type() === 'purchase' ? 'compra' : type() === 'adjustment' ? 'ajuste' : type() === 'return' ? 'devolución' : 'venta') }}
+        </button>
+      </form>
+      @if (type() === 'sale' && saleLines().length) {
+        <section class="sale-cart" aria-label="Productos de la venta">
+          <h2>Productos de la venta ({{ saleItems() }} artículos)</h2>
+          @for (line of saleLines(); track $index; let lineIndex = $index) {
+            <div>
+              <span>{{ productName(line.productId) }} × {{ line.quantity }}</span>
+              <strong>{{ productPrice(line.productId) * line.quantity | currency: 'MXN' }}</strong>
+              <button mat-icon-button type="button" (click)="removeSaleLine(lineIndex)" aria-label="Quitar producto">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+          <footer><strong>Total calculado por el servidor: {{ saleTotal() | currency: 'MXN' }}</strong></footer>
+        </section>
+      }
+    }
+  </mat-card-content>
+</mat-card>
+
+@if (isAdmin() && !isLoading()) {
+  <section class="history">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Últimas ventas</mat-card-title>
+        <button mat-button (click)="exportSales()" [disabled]="!sales().length">
+          <mat-icon>download</mat-icon>
+          Exportar CSV
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="movement-list">
+          @for (sale of sales(); track sale.id) {
+            <div>
+              <span>
+                <strong>{{ sale.totalItems }} artículos</strong>
+                <small>{{ sale.date | date: 'medium' }}</small>
+              </span>
+              <span class="totals">
+                <span>{{ sale.lines.length }} productos</span>
+                <strong>{{ sale.total | currency: 'MXN' }}</strong>
+              </span>
+              <button mat-icon-button (click)="viewSaleDetails(sale.id)" aria-label="Ver detalle de venta">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          } @empty { <p>No hay ventas registradas.</p> }
+        </div>
+        <mat-paginator
+          [length]="salesTotal()"
+          [pageIndex]="salesPage()"
+          [pageSize]="salesPageSize()"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="changeSalesPage($event)"
+        />
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Últimas compras</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <div class="movement-list">
+          @for (purchase of purchases(); track purchase.id) {
+            <div>
+              <span>
+                <strong>{{ productName(purchase.productId) }}</strong>
+                <small>{{ purchase.date | date: 'medium' }}</small>
+              </span>
+              <span class="totals">
+                <span>{{ purchase.quantity }} uds.</span>
+                <strong>{{ purchase.totalCost | currency: 'MXN' }}</strong>
+              </span>
+              <button mat-icon-button (click)="viewPurchaseDetails(purchase.id)" aria-label="Ver detalle de compra">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          } @empty { <p>No hay compras registradas.</p> }
+        </div>
+        <mat-paginator
+          [length]="purchasesTotal()"
+          [pageIndex]="purchasesPage()"
+          [pageSize]="purchasesPageSize()"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="changePurchasesPage($event)"
+        />
+      </mat-card-content>
+    </mat-card>
+  </section>
+}

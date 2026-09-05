@@ -1,0 +1,21 @@
+<section class="page-header">
+  <p class="eyebrow">CUENTA</p>
+  <h1>Mi perfil</h1>
+  <p>Información de tu cuenta y permisos actuales.</p>
+</section>
+
+@if (isLoading()) {
+  <div class="loading"><mat-spinner diameter="36" /></div>
+} @else if (user(); as account) {
+  <mat-card class="profile-card">
+    <mat-card-content>
+      <div class="avatar">{{ account.username.slice(0, 1).toUpperCase() }}</div>
+      <div>
+        <h2>{{ account.username }}</h2>
+        <p>{{ account.email }}</p>
+        <span class="role">{{ account.role }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-footer>Cuenta creada el {{ account.createdAt | date: 'longDate' }}</mat-card-footer>
+  </mat-card>
+}

@@ -1,0 +1,129 @@
+.page-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  margin: 0.2rem 0;
+}
+
+.eyebrow {
+  color: var(--mat-sys-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.subtitle, .product-row span {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.metrics {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.metrics mat-card-content, .message-card {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.metrics mat-icon,
+.metrics i {
+  background: var(--mat-sys-primary-container);
+  border-radius: 50%;
+  color: var(--mat-sys-on-primary-container);
+  padding: 0.75rem;
+}
+
+.metrics span, .product-row div {
+  display: grid;
+}
+
+.metrics strong {
+  font-size: 1.7rem;
+}
+
+.products-card {
+  padding: 0.5rem;
+}
+
+.product-list {
+  margin-top: 1rem;
+}
+
+.product-row {
+  align-items: center;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr auto auto;
+  padding: 1rem 0;
+}
+
+.price {
+  font-weight: 600;
+}
+
+.stock {
+  border-radius: 1rem;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container) !important;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.stock.low-stock {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container) !important;
+}
+
+.loading {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.message-card {
+  padding: 1.25rem;
+}
+
+.message-card p, .empty-state p {
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 0;
+}
+.empty-state { display: grid; justify-items: center; margin-top: 1rem; row-gap: .6rem; }
+.empty-state img { max-width: 250px; width: 100%; }
+
+@media (max-width: 700px) {
+  .page-header {
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .product-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .product-row .price {
+    grid-column: 1;
+  }
+
+  .product-row .stock {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}

@@ -1,0 +1,94 @@
+@use '@angular/material' as mat;
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: 'DM Sans',
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: light;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--mat-sys-primary-container) 45%, transparent), transparent 28rem),
+    #f7f9fc;
+  color: var(--mat-sys-on-surface);
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+mat-card {
+  background: color-mix(in srgb, var(--mat-sys-surface) 96%, white);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 75%, transparent);
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 24px rgb(28 47 74 / 5%);
+  overflow: hidden;
+}
+
+mat-card-header {
+  padding: 1.25rem 1.25rem 0;
+}
+
+mat-card-content {
+  padding: 1.25rem;
+}
+
+mat-card-header + mat-card-content {
+  padding-top: 1rem;
+}
+
+mat-icon {
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.page-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.page-header > div > p:not(.eyebrow) {
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  color: var(--mat-sys-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+@media (max-width: 600px) {
+  .page-header {
+    flex-direction: column;
+  }
+}

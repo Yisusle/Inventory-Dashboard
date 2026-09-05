@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>{{ data.product ? 'Editar producto' : 'Nuevo producto' }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" />
+        @if (form.controls.name.invalid) { <mat-error>El nombre es obligatorio.</mat-error> }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>SKU</mat-label>
+        <input matInput formControlName="sku" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoryId">
+          <mat-option value="">Sin categoría</mat-option>
+          @for (category of data.categories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" min="0.01" step="0.01" formControlName="price" />
+        @if (form.controls.price.invalid) { <mat-error>Ingresa un precio válido.</mat-error> }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Stock mínimo</mat-label>
+        <input matInput type="number" min="0" step="1" formControlName="minimumStock" />
+        @if (form.controls.minimumStock.invalid) { <mat-error>Ingresa un mínimo válido.</mat-error> }
+      </mat-form-field>
+      @if (!data.product) {
+        <mat-form-field appearance="outline">
+          <mat-label>Stock inicial</mat-label>
+          <input matInput type="number" min="0" step="1" formControlName="stock" />
+          @if (form.controls.stock.invalid) { <mat-error>El stock no puede ser negativo.</mat-error> }
+        </mat-form-field>
+      } @else {
+        <p>Existencias actuales: <strong>{{ data.product.stock }}</strong>. Registra una compra para incrementarlas.</p>
+      }
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancelar</button>
+    <button mat-flat-button type="submit" [disabled]="isSaving()">
+      {{ isSaving() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

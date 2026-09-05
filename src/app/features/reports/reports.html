@@ -1,0 +1,50 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">ANALÍTICA</p>
+    <h1>Reporte de ventas</h1>
+    <p>Productos con mayor movimiento comercial.</p>
+  </div>
+  <form class="top-form" (ngSubmit)="load()">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Top productos</mat-label>
+      <input matInput type="number" min="1" max="100" [formControl]="topControl" />
+    </mat-form-field>
+    <button mat-stroked-button type="submit" [disabled]="isLoading()">
+      <mat-icon>refresh</mat-icon>
+      Actualizar
+    </button>
+  </form>
+</section>
+
+@if (isLoading()) {
+  <div class="loading"><mat-spinner diameter="36" /></div>
+} @else {
+  <div class="metrics">
+    <mat-card><mat-card-content><i class="fa-solid fa-money-bill-trend-up" aria-hidden="true"></i><div><span>Ingresos</span><strong>{{ totalRevenue() | currency: 'MXN' }}</strong></div></mat-card-content></mat-card>
+    <mat-card><mat-card-content><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i><div><span>Unidades vendidas</span><strong>{{ totalUnits() | number }}</strong></div></mat-card-content></mat-card>
+    <mat-card><mat-card-content><i class="fa-solid fa-trophy" aria-hidden="true"></i><div><span>Producto líder</span><strong>{{ products()[0]?.productName || 'Sin datos' }}</strong></div></mat-card-content></mat-card>
+  </div>
+
+  <mat-card>
+    <mat-card-header><mat-card-title>Top productos</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <div class="report-list">
+        @for (product of products(); track product.productId; let index = $index) {
+          <article>
+            <span class="ranking">{{ index + 1 }}</span>
+            <div class="product-data">
+              <div class="label"><strong>{{ product.productName }}</strong><span>{{ product.totalQuantitySold }} unidades</span></div>
+              <div class="bar"><span [style.width.%]="revenuePercent(product.totalRevenue)"></span></div>
+            </div>
+            <strong>{{ product.totalRevenue | currency: 'MXN' }}</strong>
+          </article>
+        } @empty {
+          <div class="empty">
+            <img src="illustrations/empty-state.svg" alt="No hay ventas" />
+            <p>Aún no hay ventas para generar el reporte.</p>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+}

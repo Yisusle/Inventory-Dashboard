@@ -1,0 +1,81 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">ADMINISTRACIÓN</p>
+    <h1>Catálogo</h1>
+    <p>Organiza productos y categorías de tu inventario.</p>
+  </div>
+  <button mat-flat-button (click)="openProductDialog()"><mat-icon>add</mat-icon> Nuevo producto</button>
+</section>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Productos</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (isLoading()) {
+      <div class="loading"><mat-spinner diameter="36" /></div>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+          <tbody>
+            @for (product of products(); track product.id) {
+              <tr>
+                <td><strong>{{ product.name }}</strong><small>{{ product.sku || 'Sin SKU' }}</small></td>
+                <td>{{ categoryName(product.categoryId) }}</td>
+                <td>{{ product.price | currency: 'MXN' }}</td>
+                <td>
+                  <span class="stock" [class.low]="product.stock <= product.minimumStock">
+                    {{ product.stock }} @if (product.stock <= product.minimumStock) { / mín. {{ product.minimumStock }} }
+                  </span>
+                </td>
+                <td class="actions">
+                  <button mat-icon-button (click)="viewProductDetails(product.id)" aria-label="Ver detalle de producto"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button (click)="openProductDialog(product)" aria-label="Editar producto"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button (click)="deleteProduct(product)" aria-label="Eliminar producto"><mat-icon>delete</mat-icon></button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty">
+                  <img src="illustrations/empty-state.svg" alt="No hay productos" />
+                  <p>No hay productos todavía.</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <mat-paginator
+        [length]="totalProducts()"
+        [pageIndex]="page()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[10, 25, 50]"
+        (page)="changePage($event)"
+      />
+    }
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="categories-card">
+  <mat-card-header>
+    <mat-card-title>Categorías</mat-card-title>
+    <button mat-button (click)="openCategoryDialog()"><mat-icon>add</mat-icon> Agregar</button>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="category-list">
+      @for (category of categories(); track category.id) {
+        <div><span>{{ category.name }}</span><span>
+          <button mat-icon-button (click)="viewCategoryDetails(category.id)" aria-label="Ver detalle de categoría"><mat-icon>visibility</mat-icon></button>
+          <button mat-icon-button (click)="openCategoryDialog(category)" aria-label="Editar categoría"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button (click)="deleteCategory(category)" aria-label="Eliminar categoría"><mat-icon>delete</mat-icon></button>
+        </span></div>
+      } @empty {
+        <div class="empty">
+          <img src="illustrations/empty-state.svg" alt="No hay categorías" />
+          <p>No hay categorías todavía.</p>
+        </div>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

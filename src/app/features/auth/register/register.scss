@@ -1,0 +1,14 @@
+.register-page {
+  align-items: center;
+  background: radial-gradient(circle at top right, var(--mat-sys-primary-container), transparent 45%), var(--mat-sys-surface);
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 1.5rem;
+}
+.register-card { max-width: 440px; padding: 1rem; width: 100%; }
+.hero-illustration { border-radius: .9rem; margin-bottom: 1rem; width: 100%; }
+.brand-icon { align-items: center; background: var(--mat-sys-primary); border-radius: .75rem; color: var(--mat-sys-on-primary); display: flex; justify-content: center; }
+.brand-icon i { font-size: 1rem; }
+form { display: grid; gap: .5rem; margin-top: 1.5rem; }
+button { min-height: 44px; }

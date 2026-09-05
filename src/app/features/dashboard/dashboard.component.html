@@ -1,0 +1,75 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">VISIÓN GENERAL</p>
+    <h1>Inventario</h1>
+    <p class="subtitle">Consulta el estado actual de tu catálogo.</p>
+  </div>
+  <button mat-stroked-button (click)="load()" [disabled]="isLoading()">
+    <mat-icon>refresh</mat-icon>
+    Actualizar
+  </button>
+</section>
+
+@if (isLoading()) {
+  <div class="loading"><mat-spinner diameter="40" /><span>Cargando inventario...</span></div>
+} @else if (error()) {
+  <mat-card class="message-card">
+    <mat-icon>error_outline</mat-icon>
+    <div>
+      <strong>No se pudo obtener el resumen.</strong>
+      <p>{{ error() }}</p>
+    </div>
+    <button mat-button (click)="load()">Reintentar</button>
+  </mat-card>
+} @else if (data(); as dashboard) {
+  <div class="metrics">
+    <mat-card>
+      <mat-card-content>
+        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+        <div><span>Productos</span><strong>{{ dashboard.totalProducts }}</strong></div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content>
+        <i class="fa-solid fa-tags" aria-hidden="true"></i>
+        <div><span>Categorías</span><strong>{{ dashboard.categories.length }}</strong></div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content>
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        <div><span>Stock bajo</span><strong>{{ dashboard.lowStockProducts }}</strong></div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="products-card">
+    <mat-card-header>
+      <mat-card-title>Productos recientes</mat-card-title>
+      <mat-card-subtitle>Primeros {{ dashboard.products.length }} productos disponibles</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      @if (dashboard.products.length) {
+        <div class="product-list">
+          @for (product of dashboard.products; track product.id) {
+            <article class="product-row">
+              <div>
+                <strong>{{ product.name }}</strong>
+                <span>{{ product.sku || 'Sin SKU' }}</span>
+              </div>
+              <span class="price">{{ product.price | currency: 'MXN' }}</span>
+              <span class="stock" [class.low-stock]="product.stock <= product.minimumStock">
+                {{ product.stock }} uds. @if (product.stock <= product.minimumStock) { · Reabastecer }
+              </span>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <img src="illustrations/empty-state.svg" alt="Ilustración de estado vacío" />
+          <p>Todavía no hay productos registrados.</p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+}
