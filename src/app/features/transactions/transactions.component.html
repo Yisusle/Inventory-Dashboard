@@ -187,5 +187,34 @@
         />
       </mat-card-content>
     </mat-card>
+    <mat-card class="movements-card">
+      <mat-card-header><mat-card-title>Historial de movimientos</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <div class="movement-list">
+          @for (movement of movements(); track movement.id) {
+            <div>
+              <span>
+                <strong>{{ movementType(movement.type) }} · {{ movement.productName }}</strong>
+                <small>{{ movement.createdAt | date: 'medium' }} · {{ movement.performedByUsername }}</small>
+                <small>{{ movement.reason }}</small>
+              </span>
+              <span class="totals">
+                <strong [class.positive]="movement.quantityChange > 0" [class.negative]="movement.quantityChange < 0">
+                  {{ movement.quantityChange > 0 ? '+' : '' }}{{ movement.quantityChange }} uds.
+                </strong>
+                <small>Stock: {{ movement.stockAfter }}</small>
+              </span>
+            </div>
+          } @empty { <p>No hay movimientos registrados.</p> }
+        </div>
+        <mat-paginator
+          [length]="movementsTotal()"
+          [pageIndex]="movementsPage()"
+          [pageSize]="movementsPageSize()"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="changeMovementsPage($event)"
+        />
+      </mat-card-content>
+    </mat-card>
   </section>
 }

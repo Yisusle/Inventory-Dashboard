@@ -14,7 +14,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize, forkJoin, map, startWith } from 'rxjs';
 
-import { InventoryAdjustmentPayload, InventoryTransaction, Product, Sale, SaleLinePayload, SaleReturnPayload } from '../../core/models/inventory.model';
+import {
+  InventoryAdjustmentPayload,
+  InventoryMovement,
+  InventoryTransaction,
+  Product,
+  Sale,
+  SaleLinePayload,
+  SaleReturnPayload,
+} from '../../core/models/inventory.model';
 import { AuthService } from '../../core/services/auth.service';
 import { InventoryService } from '../../core/services/inventory.service';
 import { apiErrorMessage } from '../../core/utils/api-error';
@@ -58,12 +66,16 @@ export class TransactionsComponent {
   readonly sales = signal<Sale[]>([]);
   readonly saleLines = signal<SaleLinePayload[]>([]);
   readonly purchases = signal<InventoryTransaction[]>([]);
+  readonly movements = signal<InventoryMovement[]>([]);
   readonly salesPage = signal(0);
   readonly purchasesPage = signal(0);
   readonly salesPageSize = signal(10);
   readonly purchasesPageSize = signal(10);
   readonly salesTotal = signal(0);
   readonly purchasesTotal = signal(0);
+  readonly movementsPage = signal(0);
+  readonly movementsPageSize = signal(10);
+  readonly movementsTotal = signal(0);
   readonly isLoading = signal(true);
   readonly isSaving = signal(false);
   readonly form = this.formBuilder.nonNullable.group({
@@ -121,13 +133,16 @@ export class TransactionsComponent {
       products,
       purchases: this.inventoryService.getPurchases(this.purchasesPage() + 1, this.purchasesPageSize()),
       sales: this.inventoryService.getSales(this.salesPage() + 1, this.salesPageSize()),
+      movements: this.inventoryService.getInventoryMovements(this.movementsPage() + 1, this.movementsPageSize()),
     }).subscribe({
       next: (response) => {
         this.products.set(response.products.data.items);
         this.purchases.set(response.purchases.data.items);
         this.sales.set(response.sales.data.items);
+        this.movements.set(response.movements.data.items);
         this.purchasesTotal.set(response.purchases.data.total);
         this.salesTotal.set(response.sales.data.total);
+        this.movementsTotal.set(response.movements.data.total);
         this.isLoading.set(false);
       },
       error: (error: unknown) => this.showError(error, 'No se pudo cargar el historial de movimientos.'),
@@ -143,6 +158,12 @@ export class TransactionsComponent {
   changePurchasesPage(event: PageEvent): void {
     this.purchasesPage.set(event.pageIndex);
     this.purchasesPageSize.set(event.pageSize);
+    this.load();
+  }
+
+  changeMovementsPage(event: PageEvent): void {
+    this.movementsPage.set(event.pageIndex);
+    this.movementsPageSize.set(event.pageSize);
     this.load();
   }
 
@@ -254,6 +275,15 @@ export class TransactionsComponent {
 
   productName(id: string): string {
     return this.products().find((product) => product.id === id)?.name || 'Producto no disponible';
+  }
+
+  movementType(type: string): string {
+    return {
+      Sale: 'Venta',
+      Purchase: 'Compra',
+      Adjustment: 'Ajuste',
+      CustomerReturn: 'Devolución',
+    }[type] ?? type;
   }
 
   viewSaleDetails(saleId: string): void {

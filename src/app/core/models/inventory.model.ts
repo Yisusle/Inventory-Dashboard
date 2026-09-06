@@ -80,6 +80,21 @@ export interface SaleReturnPayload {
   reason: string;
 }
 
+export interface InventoryMovement {
+  id: string;
+  productId: string;
+  productName: string;
+  saleId: string | null;
+  purchaseId: string | null;
+  performedByUserId: string;
+  performedByUsername: string;
+  quantityChange: number;
+  stockAfter: number;
+  type: 'Sale' | 'Purchase' | 'Adjustment' | 'CustomerReturn' | string;
+  reason: string;
+  createdAt: string;
+}
+
 export interface User {
   id: string;
   username: string;

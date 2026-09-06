@@ -9,6 +9,7 @@ import {
   CategoryPayload,
   InventoryTransaction,
   InventoryAdjustmentPayload,
+  InventoryMovement,
   Product,
   ProductPayload,
   ProductSalesSummary,
@@ -127,6 +128,13 @@ export class InventoryService {
 
   returnSaleItem(payload: SaleReturnPayload): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>(`${environment.apiBaseUrl}/inventory-operations/returns`, payload);
+  }
+
+  getInventoryMovements(page = 1, pageSize = 10): Observable<ApiResponse<PaginatedData<InventoryMovement>>> {
+    return this.http.get<ApiResponse<PaginatedData<InventoryMovement>>>(
+      `${environment.apiBaseUrl}/inventory-operations/movements`,
+      { params: this.paginationParams(page, pageSize) },
+    );
   }
 
   private paginationParams(page: number, pageSize: number): HttpParams {

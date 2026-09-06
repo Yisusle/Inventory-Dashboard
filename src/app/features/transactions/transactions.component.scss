@@ -18,6 +18,9 @@ form button { min-height: 56px; }
 .movement-list span { display: grid; gap: .2rem; }
 .totals { text-align: right; }
 .history mat-paginator { margin-top: 0.75rem; }
+.movements-card { grid-column: 1 / -1; }
+.positive { color: #1b7f3a; }
+.negative { color: var(--mat-sys-error); }
 .loading { display: grid; min-height: 160px; place-items: center; }
 @media (max-width: 900px) { form { grid-template-columns: 1fr 1fr; } form button { grid-column: span 2; } .history { grid-template-columns: 1fr; } }
 @media (max-width: 650px) { .movement-list > div { grid-template-columns: 1fr auto; } .totals { grid-column: 1 / span 2; text-align: left; } }
