@@ -175,7 +175,13 @@ export class TransactionsComponent {
     this.isSaving.set(true);
     request.pipe(finalize(() => this.isSaving.set(false))).subscribe({
       next: () => {
-        this.snackBar.open(this.type() === 'purchase' ? 'Compra registrada.' : 'Venta registrada.', 'Cerrar', {
+        const successMessage = {
+          sale: 'Venta registrada.',
+          purchase: 'Compra registrada.',
+          adjustment: 'Ajuste de inventario registrado.',
+          return: 'Devolución registrada.',
+        }[this.type()];
+        this.snackBar.open(successMessage, 'Cerrar', {
           duration: 3000,
         });
         this.form.reset({ productId: '', quantity: 1, totalCost: 0, quantityChange: 0, reason: '', skuLookup: '', saleId: '' });
